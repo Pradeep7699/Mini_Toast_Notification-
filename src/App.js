@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import ToastNotification from './ToastNotification';
+import Routes from './Navigation/Routes';
 
-function App() {
+const App = () => {
+  
+  const [toasts, setToasts] = useState([]);
+
+  const showToast = (message, duration = 7) => {
+    const id = Date.now();
+    setToasts((prevToasts) => [
+      ...prevToasts,
+      { id, message, duration, remainingDuration: duration },
+    ]);
+
+    setTimeout(() => {
+      closeToast(id);
+    }, duration * 1000);
+  };
+
+  const closeToast = (id) => {
+    setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+  };
+
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    showToast(inputValue);
+  };
+
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      
+      <div style={{backgroundColor:"maroon",height:"55px",marginTop:"-20px"}}>
+          <p style={{fontSize:"20px",textAlign:"left",color:"white"}}>Header</p> 
+      </div>
+        <Routes/>
+    <div style={{backgroundColor:"grey",height:"55px",marginTop:"540px"}}>
+         <p style={{fontSize:"20px",textAlign:"center"}}>Footer</p> 
+      </div>
+
     </div>
   );
-}
+};
 
 export default App;
