@@ -22,10 +22,7 @@ const App = () => {
     setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
   };
 
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value;
-    showToast(inputValue);
-  };
+
 
   
 

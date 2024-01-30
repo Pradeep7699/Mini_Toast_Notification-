@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './ToastNotification.css';
 
-const ToastNotification = ({ message, onClose, onMouseEnter, onMouseLeave }) => {
+const ToastNotification = ({id, message, onClose, onMouseEnter, onMouseLeave,customDuration}) => {
   const [timer, setTimer] = useState(7);
+  const [queue, setQueue] = useState([]);
+  console.log("queue",queue)
+  console.log("key11",id,message)
+
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -11,31 +15,59 @@ const ToastNotification = ({ message, onClose, onMouseEnter, onMouseLeave }) => 
       } else {
         clearInterval(countdown);
         onClose();
+
+        if (queue.length > 0) {
+          // Display the next message in the queue
+          const nextMessage = queue.shift();
+          setQueue([...queue]); // Update the queue
+
+          // Show the next message
+          setTimeout(() => {
+            displayToast(nextMessage);
+          }, customDuration*1000);
+        }
       }
-    }, 1000);
+    }, customDuration*1000);
 
     return () => clearInterval(countdown);
-  }, [timer, onClose]);
+  }, [timer, onClose, queue]);
+
+  const displayToast = (nextMessage) => {
+    setTimer(7);
+    setQueue((prevQueue) => [...prevQueue, nextMessage]);
+  };
 
   const handleMouseEnter = () => {
+
+    console.log("handleMouseEnter calls",id)
     clearInterval(timer);
+    // stop(id)
   };
 
   const handleMouseLeave = () => {
     setTimer(7);
+    // stop(null)
+    // closeToast(id)
+
   };
 
   return (
     <div
       className="toast-notification"
-      onMouseEnter={handleMouseEnter}
+      onMouseEnter={()=>{
+        handleMouseEnter()
+        console.log("enter mouse calls")
+      }}
       onMouseLeave={handleMouseLeave}
     >
-      <span>{message}</span><span></span>
+      <span>{message}</span>
       <button onClick={onClose}>x</button>
-      {/* <div className="timer">{timer}s</div> */}
+{/* 
+      {queue.slice(-3).map((queuedMessage, index) => (
+        <div key={index}>{queuedMessage}</div>
+      ))} */}
     </div>
   );
 };
-export default ToastNotification
 
+export default ToastNotification;

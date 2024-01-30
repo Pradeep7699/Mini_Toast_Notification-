@@ -7,19 +7,26 @@ export default function SecondComponent() {
   const [inputValue, setInputValue] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [customDuration, setCustomDuration] = useState(7);
+  const [clickCounter, setClickCounter] = useState(0);
 
-  const showToast = () => {
-    if (inputValue.trim() !== '') {
+  const showToast = (message="Testing", duration = customDuration) => {
+    console.log("showToast call1",message)
+
+    if (message.trim() !== '') {
+
+      console.log("showToast call2",message)
       const id = Date.now();
       setToasts((prevToasts) => [
-        ...prevToasts,
-        { id, message: inputValue, duration: customDuration, remainingDuration: customDuration },
+        { id, message: message, duration: customDuration, remainingDuration: duration }, ...prevToasts
       ]);
 
       setTimeout(() => {
         closeToast(id);
       }, customDuration * 1000);
     }
+
+
+    setInputValue("")
   };
 
   const closeToast = (id) => {
@@ -42,12 +49,16 @@ export default function SecondComponent() {
     setCustomDuration(parseInt(e.target.value));
   };
 
+  const handleShowToast = () => {
+
+    setClickCounter((prevCounter) => prevCounter + 1);
+    showToast(`${inputValue==""?"Testing":inputValue} ${clickCounter + 1}`);
+  };
   const handleConfirm = () => {
     // if(customDuration==7){
     //   alert("Please enter a timeout value")
     //   return 
     // }
-   
     closeModal();
   };
   return (
@@ -58,10 +69,11 @@ export default function SecondComponent() {
           type="text"
           id="customToast"
           placeholder="Enter here"
+          value={inputValue}
           onChange={handleInputChange}
           style={{ marginBottom: '10px', width: '300px', borderRadius: '4px' ,height:"30px"}}
         />
-        <button style={{ width: '300px' ,borderRadius: '4px' ,height:"30px"}} type="button" onClick={showToast}>
+        <button style={{ width: '300px' ,borderRadius: '4px' ,height:"30px"}} type="button" onClick={handleShowToast}>
           Show Custom Toast Message
         </button>
       </form>
@@ -76,16 +88,38 @@ export default function SecondComponent() {
         </button>
       </div>
       {/* Toast Notifications */}
-      <div className="toast-container">
-        {toasts.map((toast) => (
-          <ToastNotification
-            key={toast.id}
-            message={toast.message}
-            onClose={() => closeToast(toast.id)}
-            onMouseEnter={() => clearInterval(toast.remainingDuration)}
-            onMouseLeave={() => showToast(toast.message, toast.remainingDuration)}
-          />
-        ))}
+      <div style={{ flex: 1, marginLeft: 780,marginTop:600 }}>
+        {toasts.slice(-3).map((toast, index) => {
+          console.log("toast===>", index, toast);
+
+          return (
+            <>
+              {index < 3 ? (
+                <div
+                  style={{
+                    marginTop: 10,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flex: 1,
+                    width: 200,
+                  }}
+                >
+                  {/* <p>{JSON.stringify(toast)}</p> */}
+                  <ToastNotification
+                    key={toast.id}
+                    message={toast.message}
+                    onClose={() => closeToast(toast.id)}
+                    onMouseEnter={() => clearInterval(toast.remainingDuration)}
+                    onMouseLeave={() =>
+                      showToast(toast.message, toast.remainingDuration)
+                    }
+                    customDuration={customDuration}
+                  />
+                </div>
+              ) : null}
+            </>
+          );
+        })}
       </div>
       {/* Modal */}
       {showModal && (
