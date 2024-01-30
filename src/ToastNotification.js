@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './ToastNotification.css';
 
-const ToastNotification = ({id, message, onClose, onMouseEnter, onMouseLeave,customDuration}) => {
+const ToastNotification = ({ message, onClose, onMouseEnter, onMouseLeave,customDuration}) => {
   const [timer, setTimer] = useState(7);
-  const [queue, setQueue] = useState([]);
-  console.log("queue",queue)
-  console.log("key11",id,message)
+
+  console.log("message",message)
 
 
   useEffect(() => {
@@ -16,38 +15,22 @@ const ToastNotification = ({id, message, onClose, onMouseEnter, onMouseLeave,cus
         clearInterval(countdown);
         onClose();
 
-        if (queue.length > 0) {
-          // Display the next message in the queue
-          const nextMessage = queue.shift();
-          setQueue([...queue]); // Update the queue
-
-          // Show the next message
-          setTimeout(() => {
-            displayToast(nextMessage);
-          }, customDuration*1000);
-        }
       }
     }, customDuration*1000);
 
     return () => clearInterval(countdown);
-  }, [timer, onClose, queue]);
+  }, [timer, onClose,]);
 
-  const displayToast = (nextMessage) => {
-    setTimer(7);
-    setQueue((prevQueue) => [...prevQueue, nextMessage]);
-  };
 
   const handleMouseEnter = () => {
 
-    console.log("handleMouseEnter calls",id)
+    console.log("handleMouseEnter calls")
     clearInterval(timer);
-    // stop(id)
   };
 
   const handleMouseLeave = () => {
     setTimer(7);
-    // stop(null)
-    // closeToast(id)
+
 
   };
 
@@ -56,16 +39,12 @@ const ToastNotification = ({id, message, onClose, onMouseEnter, onMouseLeave,cus
       className="toast-notification"
       onMouseEnter={()=>{
         handleMouseEnter()
-        console.log("enter mouse calls")
+        // console.log("enter mouse calls")
       }}
       onMouseLeave={handleMouseLeave}
     >
       <span>{message}</span>
       <button onClick={onClose}>x</button>
-{/* 
-      {queue.slice(-3).map((queuedMessage, index) => (
-        <div key={index}>{queuedMessage}</div>
-      ))} */}
     </div>
   );
 };

@@ -51,6 +51,7 @@ export default function SecondComponent() {
 
   const handleShowToast = () => {
 
+    console.log("handleShowToast call")
     setClickCounter((prevCounter) => prevCounter + 1);
     showToast(`${inputValue==""?"Testing":inputValue} ${clickCounter + 1}`);
   };

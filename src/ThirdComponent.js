@@ -6,6 +6,7 @@ export default function ThirdComponent() {
   const [remainingSeconds, setRemainingSeconds] = useState();
   const [countdowntime, setcountdowntime] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [customDuration, setCustomDuration] = useState(7);
   // const [countrylist, setcountrylist] = useState([]);
   const [countries, setCountries] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -148,7 +149,7 @@ export default function ThirdComponent() {
                     style={{
                       // marginBottom: "10px",
                       width: "100px",
-                      borderRadius: "6px",
+                      borderRadius: "px",
                       height: "30px",
                       backgroundColor:currentPage === 1?"white":"lightgreen"
                     }}
@@ -176,6 +177,7 @@ export default function ThirdComponent() {
                 <div key={toast.id}>
                   {toast.remainingDuration > 0 && (
                     <ToastNotification
+                     key={toast.id}
                       message={`${toast.remainingDuration}`}
                       onClose={() => closeToast(toast.id)}
                       onMouseEnter={() =>
@@ -187,6 +189,7 @@ export default function ThirdComponent() {
                           toast.remainingDuration
                         )
                       }
+                      customDuration={customDuration}
                     />
                   )}
                   {toast.remainingDuration === 0 && (
